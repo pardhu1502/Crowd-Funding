@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CampaignStatus {
+  ACTIVE
+  FUNDED
+  CLOSED
+  CANCELLED
+}
+
+model User {
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  passwordHash String
+
+  campaigns Campaign[]
+  donations Donation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Campaign {
+  id          String @id @default(uuid())
+  title       String
+  description String
+
+  goalAmount    Decimal
+  currentAmount Decimal @default(0)
+
+  status CampaignStatus @default(ACTIVE)
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  donations Donation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Donation {
+  id String @id @default(uuid())
+
+  amount Decimal
+
+  paymentId String? @unique
+
+  donorId String
+  donor   User   @relation(fields: [donorId], references: [id])
+
+  campaignId String
+  campaign   Campaign @relation(fields: [campaignId], references: [id])
+
+  createdAt DateTime @default(now())
+}
