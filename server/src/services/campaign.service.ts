@@ -1,13 +1,7 @@
-export const getCampaigns = () =>{
+import prisma from "../config/prisma";
 
-    return [
-        {
-            id:1,
-            title:"Build School",
-            goalAmount:50000,
-            currentAmount:12000,
+export const getCampaigns = async () => {
+  const campaigns = await prisma.campaign.findMany();
 
-        },
-    ];
-
+  return campaigns;
 };
