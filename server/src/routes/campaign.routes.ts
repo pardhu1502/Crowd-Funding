@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getCampaigns } from "../controllers/campaign.controller";
+import { getCampaigns,createCampaign, } from "../controllers/campaign.controller";
 
 const router = Router();
 
 router.get("/", getCampaigns);
+router.post("/", createCampaign);
 
 export default router;
