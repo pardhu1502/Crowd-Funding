@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import type { CreateCampaignInput } from "../types/campaign.types";
+import type { CreateCampaignInput,UpdateCampaignInput, } from "../types/campaign.types";
 import { AppError } from "../utils/AppError";
 
 
@@ -39,4 +39,34 @@ export const getCampaignById = async (
   }
 
   return campaign;
+};
+
+
+export const updateCampaign = async (
+  campaignId: string,
+  data: UpdateCampaignInput
+) => {
+  const existingCampaign =
+    await prisma.campaign.findUnique({
+      where: {
+        id: campaignId,
+      },
+    });
+
+  if (!existingCampaign) {
+    throw new AppError(
+      "Campaign not found",
+      404
+    );
+  }
+
+  const updatedCampaign =
+    await prisma.campaign.update({
+      where: {
+        id: campaignId,
+      },
+      data,
+    });
+
+  return updatedCampaign;
 };

@@ -1,6 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
-import { getCampaigns as getCampaignsService, createCampaign as createCampaignService,   getCampaignById as getCampaignByIdService, } from "../services/campaign.service";
-import type { CreateCampaignInput } from "../types/campaign.types";
+import { getCampaigns as getCampaignsService,
+         createCampaign as createCampaignService,
+         getCampaignById as getCampaignByIdService,
+         updateCampaign as updateCampaignService,     
+} from "../services/campaign.service";
+import type { CreateCampaignInput,
+              UpdateCampaignInput,
+} from "../types/campaign.types";
 
 export const getCampaigns = async (
   req: Request,
@@ -49,6 +55,27 @@ export const getCampaignById = async (
     const campaign = await getCampaignByIdService(
       req.params.id as string
     );
+
+    res.status(200).json({
+      success: true,
+      data: campaign,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateCampaign = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const campaign =
+      await updateCampaignService(
+        req.params.id as string,
+        req.body as UpdateCampaignInput
+      );
 
     res.status(200).json({
       success: true,
