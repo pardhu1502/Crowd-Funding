@@ -2,7 +2,8 @@ import type { Request, Response, NextFunction } from "express";
 import { getCampaigns as getCampaignsService,
          createCampaign as createCampaignService,
          getCampaignById as getCampaignByIdService,
-         updateCampaign as updateCampaignService,     
+         updateCampaign as updateCampaignService,
+         deleteCampaign as deleteCampaignService,     
 } from "../services/campaign.service";
 import type { CreateCampaignInput,
               UpdateCampaignInput,
@@ -82,6 +83,26 @@ export const updateCampaign = async (
       data: campaign,
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteCampaign = async(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+)=>{
+  try{
+    await deleteCampaignService(
+      req.params.id as string
+    );
+
+    res.status(200).json({
+      success:true,
+      message:"Campaign deleted successfully",
+    });
+  }
+  catch(error){
     next(error);
   }
 };

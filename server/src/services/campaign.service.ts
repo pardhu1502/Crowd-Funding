@@ -70,3 +70,27 @@ export const updateCampaign = async (
 
   return updatedCampaign;
 };
+
+export const deleteCampaign = async(
+  campaignId: string
+)=>{
+  const campaign = await prisma.campaign.findUnique({
+    where: {
+      id: campaignId,
+    },
+  });
+
+  if(!campaign){
+    throw new AppError(
+      "Campaign not found",
+      404
+    );
+  }
+  await prisma.campaign.delete({
+    where: {
+      id: campaignId,
+    },
+});
+
+return;
+};
