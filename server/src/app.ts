@@ -3,7 +3,7 @@ import  cors from 'cors';
 
 import campaignRoutes from "./routes/campaign.routes";
 import { errorHandler } from './middleware/error.middleware';
-
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 
@@ -18,6 +18,7 @@ res.status(200).json({
 });
 
 app.use("/api/campaigns", campaignRoutes);
+app.use("/api/auth", authRoutes);
 app.use(errorHandler);
 
 export default app;
