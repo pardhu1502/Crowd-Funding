@@ -6,14 +6,14 @@ import { getCampaigns,
     deleteCampaign,
 } from "../controllers/campaign.controller";
 import { validate } from "../middleware/validate.middleware";
-import { createCampaignSchema } from "../validators/campaign.validator";
+import { createCampaignSchema,updateCampaignSchema, } from "../validators/campaign.validator";
 
 const router = Router();
 
 router.get("/", getCampaigns);
 router.post("/", validate(createCampaignSchema), createCampaign);
 router.get("/:id", getCampaignById);
-router.patch("/:id", updateCampaign);
+router.patch("/:id", validate(updateCampaignSchema), updateCampaign);
 router.delete("/:id", deleteCampaign);
 
 export default router;
