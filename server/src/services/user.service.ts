@@ -1,0 +1,26 @@
+import prisma from "../config/prisma";
+import  { AppError } from "../utils/AppError";
+
+export const getProfile = async(
+    userId:string
+) => {
+    const user =await prisma.user.findUnique({
+        where:{
+            id: userId,
+        },
+        select:{
+            id:true,
+            name:true,
+            email:true,
+            createdAt:true,
+        },
+    });
+if(!user){
+    throw new AppError(
+        "User not found",
+        404
+    );
+}
+
+return user;
+};
