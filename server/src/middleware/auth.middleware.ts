@@ -46,12 +46,16 @@ export const authenticate = (
     req.user = decoded;
 
     next();
-  } catch {
-    next(
-      new AppError(
-        "Invalid or expired token",
-        401
-      )
-    );
+  } catch (error) {
+  if (error instanceof AppError) {
+    return next(error);
+  }
+
+  next(
+    new AppError(
+      "Invalid or expired token",
+      401
+    )
+  );
   }
 };
