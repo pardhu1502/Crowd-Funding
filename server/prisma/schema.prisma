@@ -19,6 +19,12 @@ enum CampaignStatus {
   CANCELLED
 }
 
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 model User {
   id           String @id @default(uuid())
   name         String
@@ -58,11 +64,13 @@ model Donation {
 
   paymentId String? @unique
 
+  paymentStatus PaymentStatus @default(PENDING)
+
   donorId String
-  donor   User   @relation(fields: [donorId], references: [id])
+  donor User @relation(fields: [donorId], references: [id])
 
   campaignId String
-  campaign   Campaign @relation(fields: [campaignId], references: [id])
+  campaign Campaign @relation(fields: [campaignId], references: [id])
 
   createdAt DateTime @default(now())
 }
