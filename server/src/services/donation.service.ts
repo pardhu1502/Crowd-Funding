@@ -51,3 +51,39 @@ export const createDonation = async(
 
   return result;
 };
+
+
+export const getCampaignDonations = async (
+  campaignId: string
+) => {
+  const campaign = await prisma.campaign.findUnique({
+    where: {
+      id: campaignId,
+    },
+  });
+
+  if (!campaign) {
+    throw new AppError(
+      "Campaign not found",
+      404
+    );
+  }
+
+  return prisma.donation.findMany({
+    where: {
+      campaignId,
+    },
+    include: {
+      donor: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+};
