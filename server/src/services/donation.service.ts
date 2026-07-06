@@ -70,20 +70,24 @@ export const getCampaignDonations = async (
   }
 
   return prisma.donation.findMany({
-    where: {
-      campaignId,
-    },
-    include: {
-      donor: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
+  where: {
+    campaignId,
+  },
+  select: {
+    id: true,
+    amount: true,
+    paymentStatus: true,
+    createdAt: true,
+    donor: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  },
+  orderBy: {
+    createdAt: "desc",
+  },
+});
 };
