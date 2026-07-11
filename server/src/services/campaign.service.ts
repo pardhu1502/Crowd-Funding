@@ -44,6 +44,7 @@ export const getCampaignById = async (
 
 export const updateCampaign = async (
   campaignId: string,
+  userId: string,
   data: UpdateCampaignInput
 ) => {
   const existingCampaign =
@@ -60,6 +61,13 @@ export const updateCampaign = async (
     );
   }
 
+  if(existingCampaign.creatorId !== userId){
+    throw new AppError(
+      "You are not authorized to perform this action",
+      403
+    );
+  }
+
   const updatedCampaign =
     await prisma.campaign.update({
       where: {
@@ -71,26 +79,35 @@ export const updateCampaign = async (
   return updatedCampaign;
 };
 
-export const deleteCampaign = async(
-  campaignId: string
-)=>{
+export const deleteCampaign = async (
+  campaignId: string,
+  userId: string
+) => {
   const campaign = await prisma.campaign.findUnique({
     where: {
       id: campaignId,
     },
   });
 
-  if(!campaign){
+  if (!campaign) {
     throw new AppError(
       "Campaign not found",
       404
     );
   }
+
+  if (campaign.creatorId !== userId) {
+    throw new AppError(
+      "You are not authorized to perform this action",
+      403
+    );
+  }
+
   await prisma.campaign.delete({
     where: {
       id: campaignId,
     },
-});
+  });
 
-return;
+  return;
 };

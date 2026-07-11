@@ -75,6 +75,7 @@ export const updateCampaign = async (
     const campaign =
       await updateCampaignService(
         req.params.id as string,
+        req.user.userId,
         req.body as UpdateCampaignInput
       );
 
@@ -94,7 +95,8 @@ export const deleteCampaign = async(
 )=>{
   try{
     await deleteCampaignService(
-      req.params.id as string
+      req.params.id as string,
+      req.user.userId
     );
 
     res.status(200).json({
