@@ -1,12 +1,58 @@
 import prisma from "../config/prisma";
 import type { CreateCampaignInput,UpdateCampaignInput, } from "../types/campaign.types";
 import { AppError } from "../utils/AppError";
+import { CampaignStatus } from "@prisma/client";
 
 
-export const getCampaigns = async () => {
-  const campaigns = await prisma.campaign.findMany();
+// export const getCampaigns = async () => {
+//   const campaigns = await prisma.campaign.findMany();
 
-  return campaigns;
+//   return campaigns;
+// };
+
+export const getCampaigns = async (
+  page = 1,
+  limit = 10,
+  search?: string,
+  status?:CampaignStatus
+) => {
+  const skip = (page - 1) * limit;
+
+  const where = {
+    ...(search && {
+      title: {
+        contains: search,
+        mode: "insensitive" as const,
+      },
+    }),
+
+    ...(status && {
+      status,
+    }),
+  };
+
+  const campaigns = await prisma.campaign.findMany({
+    where,
+    skip,
+    take: limit,
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const total = await prisma.campaign.count({
+    where,
+  });
+
+  return {
+    campaigns,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 export const createCampaign = async (data: CreateCampaignInput) =>{

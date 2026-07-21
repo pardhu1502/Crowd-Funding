@@ -9,24 +9,38 @@ import type { CreateCampaignInput,
               UpdateCampaignInput,
 } from "../types/campaign.types";
 
+import { CampaignStatus } from "@prisma/client";
+
 export const getCampaigns = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  try{
-  const campaigns = await getCampaignsService();
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
 
-  res.status(200).json({
-    success: true,
-    data: campaigns,
-  });
-}
-catch(error){
-  next(error);
-}
+    const search = req.query.search as string | undefined;
+
+    const status = req.query.status as
+      | CampaignStatus
+      | undefined;
+
+    const campaigns = await getCampaignsService(
+      page,
+      limit,
+      search,
+      status
+    );
+
+    res.status(200).json({
+      success: true,
+      data: campaigns,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
-
 export const createCampaign = async (
   req: Request,
   res: Response,
