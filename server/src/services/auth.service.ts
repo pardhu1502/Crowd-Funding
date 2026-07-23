@@ -7,6 +7,8 @@ import { AppError } from "../utils/AppError";
 import jwt from "jsonwebtoken";
 import type { LoginInput } from "../types/auth.types";
 
+import { env } from "../config/env";
+
 export const registerUser = async (
     data:RegisterInput
 )=>{
@@ -73,7 +75,7 @@ export const loginUser = async (
       userId: user.id,
       email: user.email,
     },
-    process.env.JWT_SECRET as string,
+    env.JWT_SECRET as string,
     {
       expiresIn: "7d",
     }

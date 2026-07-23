@@ -6,6 +6,7 @@ import type {
 
 import jwt from "jsonwebtoken";
 import { AppError } from "../utils/AppError"
+import { env } from "../config/env";
 
 interface JwtPayload {
     userId: string;
@@ -40,7 +41,7 @@ export const authenticate = (
 
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET as string
+      env.JWT_SECRET as string
     ) as JwtPayload;
 
     req.user = decoded;
