@@ -7,9 +7,11 @@ export const createPaymentOrder = async (
   next: NextFunction
 ) => {
   try {
-    const { amount } = req.body;
+    const { campaignId, amount } = req.body;
 
-    const order = await createOrder(amount);
+    const donorId = req.user!.userId;
+
+    const order = await createOrder(campaignId,donorId,amount);
 
     res.status(200).json({
       success: true,

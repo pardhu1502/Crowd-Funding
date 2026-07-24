@@ -62,6 +62,8 @@ model Donation {
 
   amount Decimal
 
+  orderId String? @unique
+
   paymentId String? @unique
 
   paymentStatus PaymentStatus @default(PENDING)
