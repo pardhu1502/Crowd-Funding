@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware";
-import { createPaymentOrder } from "../controllers/payment.controller";
+import { createPaymentOrder,verifyPaymentController } from "../controllers/payment.controller";
 import { validate } from "../middleware/validate.middleware";
-import { createOrderSchema } from "../validators/payment.validator";
+import { createOrderSchema,verifyPaymentSchema } from "../validators/payment.validator";
+
 
 const router = Router();
 
@@ -11,6 +12,13 @@ router.post(
   authenticate,
   validate(createOrderSchema),
   createPaymentOrder
+);
+
+router.post(
+  "/verify",
+  authenticate,
+  validate(verifyPaymentSchema),
+  verifyPaymentController
 );
 
 export default router;
